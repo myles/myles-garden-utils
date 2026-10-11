@@ -1,7 +1,6 @@
+import { isIsbn10, isIsbn13 } from "../regex/isbn.ts";
 import { ISBN_RANGE_RULES } from "./isbnRanges.ts";
 
-const ISBN_10_PATTERN = /^\d{9}[\dX]$/;
-const ISBN_13_PATTERN = /^97[89]\d{10}$/;
 const SEPARATOR_PATTERN = /[\s-]/g;
 
 // An ISBN-10 is an ISBN-13 in the 978 prefix with the prefix dropped.
@@ -18,11 +17,11 @@ const RANGE_DIGIT_COUNT = 7;
 export const toDisplayIsbn = (isbn: string): string => {
   const normalizedIsbn = isbn.replace(SEPARATOR_PATTERN, "").toUpperCase();
 
-  if (ISBN_13_PATTERN.test(normalizedIsbn)) {
+  if (isIsbn13(normalizedIsbn)) {
     return splitIsbn13(normalizedIsbn)?.join("-") ?? normalizedIsbn;
   }
 
-  if (ISBN_10_PATTERN.test(normalizedIsbn)) {
+  if (isIsbn10(normalizedIsbn)) {
     const parts = splitIsbn13(ISBN_10_PREFIX + normalizedIsbn);
     return parts?.slice(1).join("-") ?? normalizedIsbn;
   }

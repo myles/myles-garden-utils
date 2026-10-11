@@ -21,6 +21,7 @@
     ".": "./dist/index.mjs",
     "./array": "./dist/array.mjs",
     "./date": "./dist/date.mjs",
+    "./regex": "./dist/regex.mjs",
     "./text": "./dist/text.mjs",
     "./zod": "./dist/zod.mjs",
     "./package.json": "./package.json"
