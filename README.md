@@ -10,7 +10,7 @@ Every function is framework-free and ships as ESM with type declarations. Date h
 
 - **An ESM environment.** The package is published as ES modules only.
 - **[date-fns](https://date-fns.org) v4** and **[@date-fns/tz](https://github.com/date-fns/tz) v1**, only if you use the [`/date`](#dates) or [`/zod`](#zod-schemas) entry points.
-- **[zod](https://zod.dev) v4**, only if you use the [`/zod` entry point](#zod-schemas).
+- **[zod](https://zod.dev) v3.25+ or v4**, only if you use the [`/zod` entry point](#zod-schemas).
 
 All three are **optional** peer dependencies. The main entry point imports none of them, so the text and array helpers work without them.
 

@@ -27,6 +27,24 @@ export default defineConfig({
     },
     exports: true,
   },
+  test: {
+    projects: [
+      {
+        test: { name: "default" },
+      },
+      {
+        // The zod schemas run again against zod 3, which the peer range
+        // also allows; `zod3` is an npm alias for it.
+        resolve: {
+          alias: [{ find: /^zod$/, replacement: "zod3" }],
+        },
+        test: {
+          name: "zod3",
+          include: ["tests/zod/**/*.test.ts"],
+        },
+      },
+    ],
+  },
   lint: {
     extends: [mylesOxlintConfig],
     options: {
