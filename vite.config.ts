@@ -13,6 +13,7 @@ export default defineConfig({
       index: "src/index.ts",
       array: "src/array/index.ts",
       date: "src/date/index.ts",
+      identifier: "src/identifier/index.ts",
       regex: "src/regex/index.ts",
       text: "src/text/index.ts",
       zod: "src/zod/index.ts",

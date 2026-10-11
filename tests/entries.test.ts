@@ -33,7 +33,7 @@ const collectPackages = (entryPath: string): Set<string> => {
 };
 
 describe("entry points", () => {
-  it.each(["index.ts", "array/index.ts", "regex/index.ts", "text/index.ts"])(
+  it.each(["index.ts", "array/index.ts", "identifier/index.ts", "regex/index.ts", "text/index.ts"])(
     "%s imports no optional peers",
     (entry) => {
       const packages = collectPackages(resolve(SRC_DIR, entry));
