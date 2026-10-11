@@ -1,7 +1,7 @@
 {
   "name": "@myles-garden/utils",
   "version": "0.0.0-development",
-  "description": "A starter for creating a TypeScript package.",
+  "description": "Shared utilities for myles.garden.",
   "homepage": "https://github.com/myles/myles-garden-utils#readme",
   "bugs": {
     "url": "https://github.com/myles/myles-garden-utils/issues"
@@ -16,6 +16,7 @@
     "dist"
   ],
   "type": "module",
+  "sideEffects": false,
   "exports": {
     ".": "./dist/index.mjs",
     "./array": "./dist/array.mjs",
@@ -42,7 +43,6 @@
     "@mylesb/oxfmt-config": "^1.0.0",
     "@mylesb/oxlint-config": "^1.0.0",
     "@types/node": "^26.1.1",
-    "bumpp": "^11.1.0",
     "date-fns": "^4.4.0",
     "semantic-release": "^25.0.9",
     "typescript": "^7.0.2",
@@ -74,5 +74,8 @@
       "version": "12.2.0",
       "onFail": "download"
     }
+  },
+  "engines": {
+    "node": ">=22"
   }
 }
