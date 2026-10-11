@@ -6,5 +6,6 @@ export * from "./toDisplayAge.ts";
 export * from "./toDisplayDate.ts";
 export * from "./toDisplayDuration.ts";
 export * from "./toIcsDateArray.ts";
+export * from "./toIsoDate.ts";
 export * from "./toIsoDuration.ts";
 export * from "./toOffsetIsoString.ts";
