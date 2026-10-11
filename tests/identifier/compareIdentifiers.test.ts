@@ -1,6 +1,9 @@
 import { expect, describe, it } from "vite-plus/test";
 
-import { compareIdentifiers } from "../../src/identifier/compareIdentifiers.ts";
+import {
+  compareIdentifiers,
+  createIdentifierComparator,
+} from "../../src/identifier/compareIdentifiers.ts";
 
 const sortIdentifiers = (ids: string[]): string[] => ids.toSorted(compareIdentifiers);
 
@@ -37,5 +40,39 @@ describe("compareIdentifiers", () => {
   it("returns zero for equal identifiers", () => {
     expect(compareIdentifiers("MB-100-1", "MB-100-1")).toBe(0);
     expect(compareIdentifiers("nope", "nope")).toBe(0);
+  });
+});
+
+describe("createIdentifierComparator", () => {
+  it("orders listed series first, in the given order", () => {
+    const compare = createIdentifierComparator(["TREX", "ORB", "MB"]);
+
+    expect(["MB-1", "ORB-1", "TREX-1"].toSorted(compare)).toEqual(["TREX-1", "ORB-1", "MB-1"]);
+  });
+
+  it("orders unlisted series after listed ones, alphabetically", () => {
+    const compare = createIdentifierComparator(["MB"]);
+
+    expect(["TREX-1", "ARC-1", "MB-1"].toSorted(compare)).toEqual(["MB-1", "ARC-1", "TREX-1"]);
+  });
+
+  it("orders within a series by item, then part", () => {
+    const compare = createIdentifierComparator(["MB"]);
+
+    expect(["MB-10", "MB-2-1", "MB-2"].toSorted(compare)).toEqual(["MB-2", "MB-2-1", "MB-10"]);
+  });
+
+  it("orders the same array differently to compareIdentifiers", () => {
+    const ids = ["TREX-1", "MB-2", "ARC-1", "MB-1-1", "nope"];
+    const compare = createIdentifierComparator(["MB"]);
+
+    expect(ids.toSorted(compareIdentifiers)).toEqual(["ARC-1", "MB-1-1", "MB-2", "TREX-1", "nope"]);
+    expect(ids.toSorted(compare)).toEqual(["MB-1-1", "MB-2", "ARC-1", "TREX-1", "nope"]);
+  });
+
+  it("orders invalid identifiers last", () => {
+    const compare = createIdentifierComparator(["MB"]);
+
+    expect(["nope", "ARC-1", "MB-1"].toSorted(compare)).toEqual(["MB-1", "ARC-1", "nope"]);
   });
 });
