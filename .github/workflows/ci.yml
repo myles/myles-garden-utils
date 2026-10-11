@@ -36,7 +36,12 @@ jobs:
 
       - id: test
         name: 🧪 Run tests
-        run: vp test
+        run: vp test --project default
+
+      # The zod schemas again, against zod 3 through the `zod3` alias.
+      - id: test-zod3
+        name: 🧪 Run zod schema tests against zod 3
+        run: vp test --project zod3
 
       - id: build
         name: 🏗️ Build package
