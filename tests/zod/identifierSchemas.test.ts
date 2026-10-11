@@ -1,7 +1,7 @@
 import { expect, describe, it } from "vite-plus/test";
 import { z } from "zod";
 
-import { IdentifierSchema } from "../../src/zod/index.ts";
+import { IdentifierSchema, ParsedIdentifierSchema } from "../../src/zod/index.ts";
 
 describe("IdentifierSchema", () => {
   it.each(["MB-100", "MB-100-1", "TREX-1", "TREX-73"])("accepts %s", (value) => {
@@ -32,5 +32,47 @@ describe("IdentifierSchema", () => {
 
   it("explains the format in its description", () => {
     expect(IdentifierSchema.description).toContain("MB-100");
+  });
+});
+
+describe("ParsedIdentifierSchema", () => {
+  it("parses an item", () => {
+    expect(ParsedIdentifierSchema.parse("MB-100")).toEqual({
+      value: "MB-100",
+      series: "MB",
+      item: 100,
+    });
+  });
+
+  it("parses a part", () => {
+    expect(ParsedIdentifierSchema.parse("MB-100-1")).toEqual({
+      value: "MB-100-1",
+      series: "MB",
+      item: 100,
+      part: 1,
+    });
+  });
+
+  it("parses part zero", () => {
+    expect(ParsedIdentifierSchema.parse("TREX-73-0")).toMatchObject({ part: 0 });
+  });
+
+  it.each(["mb-100", "MB 100", "MB-1-2-3", " MB-100 "])("rejects %s", (value) => {
+    const result = ParsedIdentifierSchema.safeParse(value);
+
+    expect(result.success).toBe(false);
+    expect(result.error?.issues[0]?.message).toBe("Malformed identifier.");
+  });
+
+  it("rejects non-strings", () => {
+    expect(ParsedIdentifierSchema.safeParse(100).success).toBe(false);
+  });
+
+  it("is built with the consumer's zod", () => {
+    expect(ParsedIdentifierSchema).toBeInstanceOf(z.ZodType);
+  });
+
+  it("explains the format in its description", () => {
+    expect(ParsedIdentifierSchema.description).toContain("MB-100");
   });
 });
