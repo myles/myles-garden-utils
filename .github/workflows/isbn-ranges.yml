@@ -1,0 +1,79 @@
+name: Update ISBN Ranges
+
+on:
+  schedule:
+    # 06:17 UTC on the 1st of each month, off the hour to dodge the cron rush.
+    - cron: "17 6 1 * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  actions: write
+
+concurrency:
+  group: isbn-ranges
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+
+    steps:
+      - id: checkout
+        name: 📥 Checkout code
+        uses: actions/checkout@v7
+
+      - id: setup-vp
+        name: ⚙️ Setup Vite+
+        uses: voidzero-dev/setup-vp@v1.21.2
+        with:
+          node-version: "24"
+          cache: true
+          run-install: false
+
+      - id: install-dependencies
+        name: 📦 Install dependencies
+        run: vp install
+
+      - id: update
+        name: 📚 Regenerate ISBN range data
+        run: vp run isbn-ranges:update
+
+      # The `// Source:` header carries the export timestamp, which changes on
+      # every run. Ignore it so only changes to the rules trigger a release.
+      - id: detect
+        name: 🔎 Detect range changes
+        run: |
+          if git diff --quiet -I '^// Source:' -- src/text/isbnRanges.ts; then
+            echo "changed=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "changed=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - id: check
+        name: 🔍 Run format, lint, and type checks
+        if: steps.detect.outputs.changed == 'true'
+        run: vp check
+
+      - id: test
+        name: 🧪 Run tests
+        if: steps.detect.outputs.changed == 'true'
+        run: vp test
+
+      - id: commit
+        name: 💾 Commit and push
+        if: steps.detect.outputs.changed == 'true'
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email \
+            "41898283+github-actions[bot]@users.noreply.github.com"
+          git commit -am "fix: update ISBN range data"
+          git push origin HEAD:main
+
+      # Pushes made with GITHUB_TOKEN don't trigger other workflows, but a
+      # workflow_dispatch does. The `fix:` commit makes it a patch release.
+      - id: release
+        name: 🚀 Trigger patch release
+        if: steps.detect.outputs.changed == 'true'
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh workflow run publish.yml --ref main
