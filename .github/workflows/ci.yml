@@ -1,0 +1,43 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  ci:
+    runs-on: ubuntu-latest
+
+    steps:
+      - id: checkout
+        name: 📥 Checkout code
+        uses: actions/checkout@v7
+
+      - id: setup-vp
+        name: ⚙️ Setup Vite+
+        uses: voidzero-dev/setup-vp@v1.21.2
+        with:
+          node-version: "24"
+          cache: true
+          run-install: false
+
+      - id: install-dependencies
+        name: 📦 Install dependencies
+        run: vp install
+
+      - id: check
+        name: 🔍 Run format, lint, and type checks
+        run: vp check
+
+      - id: test
+        name: 🧪 Run tests
+        run: vp test
+
+      - id: build
+        name: 🏗️ Build package
+        run: vp run build

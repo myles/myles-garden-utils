@@ -1,0 +1,93 @@
+name: Publish Package to NPM
+
+on:
+  workflow_dispatch:
+    inputs:
+      dry_run:
+        description: "Dry run (analyze and verify, but do not publish or tag)"
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    name: Verify package
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - id: checkout
+        name: 📥 Checkout code
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - id: setup-vp
+        name: ⚙️ Setup Vite+
+        uses: voidzero-dev/setup-vp@v1.21.2
+        with:
+          node-version: "24"
+          cache: true
+          run-install: false
+
+      - id: install-dependencies
+        name: 📦 Install dependencies
+        run: vp install
+
+      - id: check
+        name: 🔍 Run format, lint, and type checks
+        run: vp check
+
+      - id: test
+        name: 🧪 Run tests
+        run: vp test
+
+      - id: verify-package
+        name: ✅ Verify dependency signatures
+        run: npm audit signatures
+
+  publish:
+    name: Publish package
+
+    runs-on: ubuntu-latest
+
+    needs: verify
+
+    permissions:
+      contents: write
+      issues: write
+      pull-requests: write
+      id-token: write
+
+    steps:
+      - id: checkout
+        name: 📥 Checkout code
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - id: setup-vp
+        name: ⚙️ Setup Vite+
+        uses: voidzero-dev/setup-vp@v1.21.2
+        with:
+          # semantic-release requires ^22.14.0 || >=24.10.0.
+          node-version: "24"
+          cache: true
+          run-install: false
+          registry-url: "https://registry.npmjs.org"
+
+      - id: install-dependencies
+        name: 📦 Install dependencies
+        run: vp install
+
+      # `npm publish` runs the `prepublishOnly` script, which builds `dist`.
+      # `--no-install` so a missing devDependency fails loudly instead of
+      # silently fetching whatever version is current.
+      - id: publish
+        name: 🚀 Publish package to NPM
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: npx --no-install semantic-release ${{ inputs.dry_run && '--dry-run' || '' }}
