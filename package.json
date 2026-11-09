@@ -40,6 +40,7 @@
     "dev": "vp pack --watch",
     "docs:build": "vp run --filter ./docs build",
     "docs:dev": "vp run --filter ./docs dev",
+    "docs:sync": "vp run --filter ./docs sync",
     "isbn-ranges:update": "node scripts/isbn-ranges-update.ts && vp fmt src/text/isbnRanges.ts",
     "prepare": "vp config",
     "prepublishOnly": "vp run build",

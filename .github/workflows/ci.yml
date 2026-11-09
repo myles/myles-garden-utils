@@ -30,6 +30,11 @@ jobs:
         name: 📦 Install dependencies
         run: vp install
 
+      # We need to sync astro so that the "check" step works.
+      - id: docs-sync
+        name: 📝 Run astro sync in the docs
+        run: vp run docs:sync
+
       - id: check
         name: 🔍 Run format, lint, and type checks
         run: vp check
