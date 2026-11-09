@@ -1,10 +1,14 @@
-import { readFileSync } from "node:fs";
+import { readdirSync, readFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import { expect, describe, it } from "vite-plus/test";
 
 const SRC_DIR = resolve(import.meta.dirname, "../src");
 const IMPORT_PATTERN = /from\s+"([^"]+)"/g;
 const OPTIONAL_PEERS = ["date-fns", "@date-fns/tz", "zod"];
+const MODULE_DIRS = ["array", "date", "identifier", "regex", "text", "zod"];
+
+// Implementation details that the entries deliberately don't re-export.
+const INTERNAL_FILES = new Set(["text/isbnRanges.ts"]);
 
 // Walk relative imports from an entry and collect every package it pulls in.
 const collectPackages = (entryPath: string): Set<string> => {
@@ -51,5 +55,22 @@ describe("entry points", () => {
 
     expect(packages).toContain("date-fns");
     expect(packages).toContain("@date-fns/tz");
+  });
+
+  it.each(MODULE_DIRS)("%s/index.ts re-exports every module", (dir) => {
+    const entrySource = readFileSync(resolve(SRC_DIR, dir, "index.ts"), "utf8");
+    const reexported = Array.from(
+      entrySource.matchAll(IMPORT_PATTERN),
+      ([, specifier]) => specifier,
+    );
+
+    const modules = readdirSync(resolve(SRC_DIR, dir)).filter(
+      (file) =>
+        file.endsWith(".ts") && file !== "index.ts" && !INTERNAL_FILES.has(`${dir}/${file}`),
+    );
+
+    for (const file of modules) {
+      expect(reexported).toContain(`./${file}`);
+    }
   });
 });

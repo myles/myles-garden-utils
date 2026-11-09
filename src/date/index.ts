@@ -1,5 +1,6 @@
 export * from "./calendarMonth.ts";
 export * from "./getQuarterRange.ts";
+export * from "./getWeekRange.ts";
 export * from "./getYearsAndMonthsInRange.ts";
 export * from "./localizeDate.ts";
 export * from "./toDisplayAge.ts";
