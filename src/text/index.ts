@@ -5,6 +5,7 @@ export * from "./toClockEmoji.ts";
 export * from "./toDisplayCoordinates.ts";
 export * from "./toDisplayIsbn.ts";
 export * from "./toDisplayList.ts";
+export * from "./toDisplayPercentage.ts";
 export * from "./toDisplayUrl.ts";
 export * from "./toJsonLdString.ts";
 export * from "./toSortKey.ts";

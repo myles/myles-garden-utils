@@ -79,6 +79,7 @@ const { series, item, part } = ParsedIdentifierSchema.parse("MB-100-1");
 | `toDisplayUrl(url, { maxPathChars })`                | `"https://www.example.com/path/"` → `"example.com/path"`          |
 | `toDisplayIsbn(isbn)`                                | `"9780306406157"` → `"978-0-306-40615-7"`                         |
 | `toDisplayCoordinates(latitude, longitude)`          | `(43.7, -79.42)` → `"43.70° N, 79.42° W"`                         |
+| `toDisplayPercentage(value, { maxFractionDigits })`  | `0.75` → `"75%"`                                                  |
 | `toClockEmoji(date)`                                 | 13:45 → `"🕐"`                                                    |
 | `toCanonicalUrl(url)`                                | `"https://example.com/a/"` → `"https://example.com/a"`            |
 | `trimTrailingSlash(pathname)`                        | `"/a/b/"` → `"/a/b"`; the root `"/"` is kept                      |
