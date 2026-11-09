@@ -2,7 +2,7 @@
   "name": "@myles-garden/utils",
   "version": "0.0.0-development",
   "description": "Shared utilities for myles.garden.",
-  "homepage": "https://github.com/myles/myles-garden-utils#readme",
+  "homepage": "https://utils.myles.garden",
   "bugs": {
     "url": "https://github.com/myles/myles-garden-utils/issues"
   },
