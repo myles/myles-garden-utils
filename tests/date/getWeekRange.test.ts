@@ -40,4 +40,8 @@ describe("getWeekRange", () => {
       "2026-10-25T23:59:59.999Z",
     ]);
   });
+
+  it("rejects an invalid date", () => {
+    expect(() => getWeekRange(new Date("not a date"))).toThrow(RangeError);
+  });
 });
