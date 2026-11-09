@@ -106,6 +106,7 @@ Functions that read a date in a time zone accept `{ timeZone }`, which defaults 
 | `toOffsetIsoString(date, { timeZone })`        | `"2023-10-05T10:30:00-04:00"`                                                        |
 | `toIcsDateArray(date)`                         | `[2023, 10, 5, 14, 30]`, the UTC array the `ics` package expects                     |
 | `getQuarterRange(year, quarter, { timeZone })` | `[startsAt, endsAt]` of a quarter                                                    |
+| `getWeekRange(date, { timeZone })`             | `[startsAt, endsAt]` of the Monday-start week containing `date`                      |
 | `getYearsAndMonthsInRange(start, end)`         | `[{ year: 2025, months: [...] }]`, for archive navigation                            |
 | `startOfCalendarMonth(date)`                   | The Monday on or before `date`                                                       |
 | `endOfCalendarMonth(date)`                     | The Sunday on or after `date`                                                        |
