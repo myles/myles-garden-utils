@@ -1,0 +1,1 @@
+The API reference is generated from the source's TSDoc comments. Each module matches a subpath export, e.g. `@myles-garden/utils/date`. The text, array, identifier, and regex helpers are also re-exported from the root entry point.

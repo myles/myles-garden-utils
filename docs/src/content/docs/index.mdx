@@ -1,0 +1,105 @@
+---
+title: "@myles-garden/utils"
+description: The shared text, date, array, and identifier helpers for myles.garden.
+template: splash
+hero:
+  tagline: The shared text, date, array, and identifier helpers for myles.garden.
+  actions:
+    - text: API reference
+      link: /api/readme/
+      icon: right-arrow
+    - text: View on GitHub
+      link: https://github.com/myles/myles-garden-utils
+      icon: external
+      variant: minimal
+---
+
+import { CardGrid, LinkCard } from "@astrojs/starlight/components";
+
+A small TypeScript package of the formatting and data helpers shared across [myles.garden](https://myles.garden) and its sibling projects: display strings for dates, lists, URLs, and ISBNs; time-zone-aware date maths; sorting; registry identifiers like `MB-100-1`; and a few [zod](https://zod.dev) schemas for partial dates and identifiers.
+
+Every function is framework-free and ships as ESM with type declarations. Date helpers default to `America/Toronto` and the site's date formats, but take a `{ timeZone }` option wherever it matters.
+
+## Installation
+
+```sh
+npm install @myles-garden/utils
+```
+
+The date helpers and zod schemas need optional peer dependencies:
+
+```sh
+npm install date-fns @date-fns/tz # for /date
+npm install date-fns @date-fns/tz zod # for /zod
+```
+
+## Usage
+
+Import the text, array, identifier, and regex helpers from the main entry point:
+
+```ts
+import {
+  compareBySortKey,
+  createIdentifierComparator,
+  toDisplayAndList,
+  toDisplayIsbn,
+} from "@myles-garden/utils";
+
+toDisplayAndList(["tea", "coffee", "juice"]); // "tea, coffee, and juice"
+toDisplayIsbn("9780306406157"); // "978-0-306-40615-7"
+
+["The Hobbit", "Dune", "A Wizard of Earthsea"].toSorted(compareBySortKey);
+// ["Dune", "The Hobbit", "A Wizard of Earthsea"]
+
+["TREX-1", "MB-2", "ARC-1"].toSorted(createIdentifierComparator(["MB"]));
+// ["MB-2", "ARC-1", "TREX-1"]
+```
+
+The date helpers and schemas live behind their own entry points:
+
+```ts
+import { toDisplayDateTime } from "@myles-garden/utils/date";
+import { ParsedIdentifierSchema, QuarterSchema } from "@myles-garden/utils/zod";
+
+toDisplayDateTime(new Date("2023-10-05T14:30:00Z")); // "5 Oct, 2023 at 10:30 AM"
+
+const { year, quarter, startsAt, endsAt } = QuarterSchema.parse("2025-Q2");
+const { series, item, part } = ParsedIdentifierSchema.parse("MB-100-1");
+```
+
+## Modules
+
+The text, array, identifier, and regex helpers are also exported from the root entry point, `@myles-garden/utils`.
+
+<CardGrid>
+  <LinkCard
+    title="Text"
+    href="/api/text/readme/"
+    description="Display strings for lists, URLs, ISBNs, coordinates, and percentages."
+  />
+  <LinkCard
+    title="Date"
+    href="/api/date/readme/"
+    description="Time-zone-aware formatting and date ranges. Needs date-fns and @date-fns/tz."
+  />
+  <LinkCard
+    title="Array"
+    href="/api/array/readme/"
+    description="Column balancing and random choice."
+  />
+  <LinkCard
+    title="Identifier"
+    href="/api/identifier/readme/"
+    description="Parse, format, sort, and nest registry identifiers like MB-100-1."
+  />
+  <LinkCard
+    title="Regex"
+    href="/api/regex/readme/"
+    description="Patterns and predicates for identifiers and ISBNs."
+  />
+  <LinkCard
+    title="zod"
+    href="/api/zod/readme/"
+    description="Schemas for partial dates, quarters, and identifiers. Needs zod."
+  />
+</CardGrid>

@@ -12,6 +12,9 @@
     "type": "git",
     "url": "git+https://github.com/myles/myles-garden-utils.git"
   },
+  "workspaces": [
+    "docs"
+  ],
   "files": [
     "dist"
   ],
@@ -35,10 +38,12 @@
     "check": "vp check",
     "check:fix": "npm run check -- --fix",
     "dev": "vp pack --watch",
+    "docs:build": "vp run --filter ./docs build",
+    "docs:dev": "vp run --filter ./docs dev",
+    "isbn-ranges:update": "node scripts/isbn-ranges-update.ts && vp fmt src/text/isbnRanges.ts",
     "prepare": "vp config",
     "prepublishOnly": "vp run build",
-    "test": "vp test",
-    "isbn-ranges:update": "node scripts/isbn-ranges-update.ts && vp fmt src/text/isbnRanges.ts"
+    "test": "vp test"
   },
   "devDependencies": {
     "@date-fns/tz": "^1.5.0",
